@@ -25,7 +25,6 @@
 
 
     <p> <input type="checkbox" id="myCheckbox">   Compare urbanization over the last 30 urbPerc and before: urban population as % of total before and after 1976 </p>
-    <p><label><input type="checkbox" id="checkboxGini" > Sort countries by income inequality trend (based on Gini coefficient)</label></p>
         <svg></svg>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js"></script>
         <script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
@@ -34,7 +33,6 @@
     <script>
 
     var dataFile = './maps/data2.csv';
-
 
     d3.csv(dataFile, function(error, data){
         var input = {'data': data, 'width': 1000, 'height': 550};
@@ -69,7 +67,7 @@
 
         // processing Data and extracting years and urbPerc
         var formattedData = formatData(input.data),
-            blockData = params.blockData = formattedData.blockData,
+            blockDataOrdered = params.blockDataOrdered = formattedData.blockDataOrdered,
             years = params.years = formattedData.years,
             urbPerc = params.urbPerc = formattedData.urbPerc;
 
@@ -83,13 +81,13 @@
             y = params.y = scales.y;
 
         x.domain(years);
-        y.domain([0, d3.max(blockData, function(d) { return d.y1; })]);
+        y.domain([0, d3.max(blockDataOrdered, function(d) { return d.y1; })]);
 
         initializeAxis(svg, x, y, height, width);
 
         // initialize bars
         var bar = params.bar = svg.selectAll('.bar')
-            .data(blockData)
+            .data(blockDataOrdered)
             .enter().append('g')
             .attr('class', 'bar');
 
@@ -104,11 +102,10 @@
         // this hierarchy is important for animation purposes
         // each bar above the chosen bar must collapse to the top of the
         // selected bar, this function defines this top
-        params.heights = setUpHeights(urbPerc, blockData);
+        params.heights = setUpHeights(urbPerc, blockDataOrdered);
 
         // defining max of each bin to convert later to percentage
-        params.maxPerBin = setUpMax(urbPerc, blockData);
-
+        params.maxPerBin = setUpMax(urbPerc, blockDataOrdered);
 
         // variable to store chosen countries when bar is clicked
         var chosen = params.chosen = {
@@ -151,7 +148,6 @@
             .style("text-anchor", "end")
             .text("Urban population as % of total");
 
-
         // initialize checkbox options
         d3.select("#myCheckbox").on("change",function(){update(params);});
         d3.select("#checkboxGini").on("change",function(){update1(params);});
@@ -166,7 +162,7 @@
         var svg = params.canvas.svg,
             margin = params.canvas.margin,
             y = params.y,
-            blockData = params.blockData,
+            blockDataOrdered = params.blockDataOrdered,
             heights = params.heights,
             chosen = params.chosen,
             width = params.width,
@@ -186,12 +182,12 @@
 
         if(newView){
             if(view !== newView){
-                blockData.forEach(function (d){
+                blockDataOrdered.forEach(function (d){
                     d.y0 /= maxPerBin[d.x];
                     d.y1 /= maxPerBin[d.x];
                     d.height /= maxPerBin[d.x];
                 });
-                heights = setUpHeights(urbPerc, blockData);
+                heights = setUpHeights(urbPerc, blockDataOrdered);
 
                 //update y-axis description
                 d3.select(".descrAxisY")
@@ -200,12 +196,12 @@
         }
         else{
             if(view !== newView){
-                blockData.forEach(function (d){
+                blockDataOrdered.forEach(function (d){
                     d.y0 *= maxPerBin[d.x];
                     d.y1 *= maxPerBin[d.x];
                     d.height *= maxPerBin[d.x];
                 });
-                heights = setUpHeights(urbPerc, blockData);
+                heights = setUpHeights(urbPerc, blockDataOrdered);
             }
         }
         params.view = newView;
@@ -213,7 +209,7 @@
 
         // update Y axis
         if(chosen.countries == null){
-            y.domain([0, d3.max(blockData, function(d) { return d.y1; })]);
+            y.domain([0, d3.max(blockDataOrdered, function(d) { return d.y1; })]);
         }
         else{
             y.domain([0, d3.max(heights[chosen.countries])]);
@@ -293,179 +289,14 @@
     } // end of first update
 
 
-    function update1(params){
-
-        // retrieving params to avoid putting params.x everywhere
-        var svg = params.canvas.svg,
-            margin = params.canvas.margin,
-            y = params.y,
-            blockData = params.blockData,
-            heights = params.heights,
-            chosen = params.chosen,
-            width = params.width,
-            height = params.height,
-            bar = params.bar,
-            urbPerc = params.urbPerc,
-            years = params.years,
-            legend = params.legend,
-            maxPerBin = params.maxPerBin,
-            view = params.view,
-            ginis = params.ginis;
-
-        var transDuration = 1030;
-
-        // re-scaling data if view is changed to percentage
-        // and re-scaling back if normal view is selected
-        var newView = d3.select("#checkboxGini").property("checked");
-
-        if(newView) {
-
-            if (view !== newView) { //checked
-
-                function showGini(d) {
-                    console.log(d.gini)
-                };
-
-                showGini();
-
-
-                // // Sort totals in descending order
-                // ginis.sort(function (a, b) {
-                //     return d3.ascending(a.key, b.key)
-                // });
-                //
-                // x.domain(urbPerc.map(function (d) {
-                //     return d.key;
-                // }));
-                //
-                // svg.selectAll(bar)
-                //     .transition()
-                //     .duration(500)
-                //     .attr("x", function (d, i) {
-                //         return x(d.key);
-                //     });
-                //
-                // // svg.selectAll(".val-label")
-                // //     .transition()
-                // //     .duration(500)
-                // //     .attr("x", function(d, i) {
-                // //         return x(d.key) + x.bandwidth() / 2;
-                // //     });
-                // //
-                // // svg.selectAll(".bar-label")
-                // //     .transition()
-                // //     .duration(500)
-                // //     .attr("transform", function(d, i) {
-                // //         return "translate(" + (x(d.key) + x.bandwidth() / 2 - 8) + "," + (height + 15) + ")" + " rotate(45)"
-                // //     });
-
-
-
-            }
-
-            else { //unchecked
-                if (view !== newView) {
-
-                    console.log("unsort")
-
-                }
-            }
-        }
-        params.view = newView;
-
-
-        // // update Y axis
-        // if(chosen.countries == null){
-        //     y.domain([0, d3.max(blockData, function(d) { return d.y1; })]);
-        // }
-        // else{
-        //     y.domain([0, d3.max(heights[chosen.countries])]);
-        // }
-        //
-        // if(newView){
-        //     y.domain([0, 1]);
-        // }
-        //
-        // var axisY = d3.axisLeft(y)
-        //     .tickSize(-width)
-        //     .tickFormat(function(d) { return d + "%"; });
-        //     // .tickFormat(d3.format(".0%"));
-        //
-        // if(newView){
-        //     axisY.tickFormat(d3.format(".0%"));
-        // }
-        //
-        // svg.selectAll('.axisY')
-        //     .transition()
-        //     .duration(transDuration)
-        //     .call(axisY);
-        //
-        //
-        // // update legend
-        // legend.selectAll('rect')
-        //     .transition()
-        //     .duration(transDuration)
-        //     .attr('height', function(d) {return choice(chosen.countries, d, 18, 18, 0);})
-        //     .attr('y', function(d) {
-        //         var i = urbPerc.indexOf(d);
-        //         if (i > urbPerc.indexOf(chosen.countries)){
-        //             return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0, 0);
-        //         }
-        //         else {
-        //             return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0,  18);
-        //         }
-        //     });
-        // legend.selectAll('text')
-        //     .transition()
-        //     .duration(transDuration)
-        //     .attr('y', function(d) {
-        //         var i = urbPerc.indexOf(d);
-        //         if (i > urbPerc.indexOf(chosen.countries)){
-        //             return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0, 0);
-        //         }
-        //         else {
-        //             return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0,  1);
-        //         }
-        //     })
-        //     .style('font-size' ,function(d, i) {return choice(chosen.countries, d, '16px', '16px', '0px');})
-        //     .attr('x', function(d) {return choice(chosen.countries, d,
-        //         width + margin.right - 25,
-        //         width + margin.right - 25,
-        //         width + margin.right - 25 - this.getComputedTextLength()/2);});
-        //
-        //
-        //
-        // // update bars
-        // bar.selectAll('rect')
-        //     .on('click', function(d){
-        //         chosen.countries = chosen.countries === d.countries ? null : d.countries;
-        //         update(params);
-        //     })
-        //     .transition()
-        //     .duration(transDuration)
-        //     .attr('y', function(d) {
-        //         return choice(chosen.countries, d.countries,
-        //             y(d.y1),
-        //             y(d.height),
-        //             myHeight(chosen, d, urbPerc, years, y, heights));})
-        //     .attr('height', function(d) {
-        //         return choice(chosen.countries, d.countries,
-        //             height - y(d.height),
-        //             height - y(d.height),
-        //             0);});
-    } // end of second update
-
-
-
-
 
     // heights is a dictionary to store bar height by countries
     // this hierarchy is important for animation purposes
-    function setUpHeights(urbPerc, blockData) {
+    function setUpHeights(urbPerc, blockDataOrdered) {
         var heights = {};
         urbPerc.forEach(function(countries) {
             var countriesVec = [];
-            blockData.filter(function (d){ return d.countries === countries;}).forEach(function(d) {
+            blockDataOrdered.filter(function (d){ return d.countries === countries;}).forEach(function(d) {
                 countriesVec.push(d.height);
             });
             heights[countries] = countriesVec;
@@ -474,8 +305,8 @@
     }
 
     // getting the max value of each bin, to convert back and forth to percentage
-    function setUpMax(urbPerc, blockData){
-        var lastcountriesElements = blockData.filter(function(d){return d.countries === urbPerc[urbPerc.length - 1]});
+    function setUpMax(urbPerc, blockDataOrdered){
+        var lastcountriesElements = blockDataOrdered.filter(function(d){return d.countries === urbPerc[urbPerc.length - 1]});
         var maxDict = {};
         lastcountriesElements.forEach(function(d) {
             maxDict[d.x] = d.y1;
@@ -569,7 +400,7 @@
 
     function setUpColors() {
         // return d3.scaleOrdinal(d3.schemeSet1);
-        colorList = ["#D38959", '#6B6B6B'];
+        colorList = ["#cec6b9", '#6B6B6B'];
         return d3.scaleOrdinal(colorList);
     }
 
@@ -585,28 +416,6 @@
 
 
         var years = [];
-        var blockData = [];
-
-        for (var i = 0; i < data.length; i++) {
-            var y = 0;
-            years.push(data[i].countryName);
-            for (var j = 0; j < urbPerc.length; j++) {
-                var height = parseFloat(data[i][urbPerc[j]]);
-                var block =
-                    {
-                        'y0': parseFloat(y),
-                        'y1': parseFloat(y) + parseFloat(height),
-                        'height': height,
-                        'x': data[i].countryName,
-                        'countries': urbPerc[j]
-                    };
-                y += parseFloat(data[i][urbPerc[j]]);
-                blockData.push(block);
-            }
-        }
-
-
-
         var copy = [];
 
         for (var k = 0; k < data.length; k++) {
@@ -618,36 +427,35 @@
        var orderedData =  copy.sort(function(a, b) {
             return parseFloat(a.gini) - parseFloat(b.gini);
         });
-        console.log(orderedData);
+        // console.log(orderedData);
 
         // rebuild blockData with orderedData
         var blockDataOrdered = [];
 
-        for (var m = 0; m < data.length; m++) {
-            var yy = 0;
-            years.push(data[m].countryName);
+        for (var m = 0; m < orderedData.length; m++) {
+            var y = 0;
+            years.push(orderedData[m].countryName);
             for (var b = 0; b < urbPerc.length; b++) {
-                height = parseFloat(data[m][urbPerc[b]]);
+                height = parseFloat(orderedData[m][urbPerc[b]]);
                 block =
                     {
-                        'y0': parseFloat(yy),
-                        'y1': parseFloat(yy) + parseFloat(height),
+                        'y0': parseFloat(y),
+                        'y1': parseFloat(y) + parseFloat(height),
                         'height': height,
-                        'x': data[m].countryName,
+                        'x': orderedData[m].countryName,
                         'countries': urbPerc[b]
                     };
-                y += parseFloat(data[m][urbPerc[b]]);
+                y += parseFloat(orderedData[m][urbPerc[b]]);
                 blockDataOrdered.push(block);
             }
         }
 
-        //console.log(blockDataOrdered);
+        console.log(blockDataOrdered);
 
         return {
-            blockData: blockData,
+            blockDataOrdered: blockDataOrdered,
             years: years,
-            urbPerc: urbPerc,
-            blockDataOrdered: blockDataOrdered
+            urbPerc: urbPerc
         }
 
     } // end of formatData function
