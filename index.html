@@ -568,7 +568,9 @@
 
 
     function setUpColors() {
-        return d3.scaleOrdinal(d3.schemeSet1);
+        // return d3.scaleOrdinal(d3.schemeSet1);
+        colorList = ["#D38959", '#6B6B6B'];
+        return d3.scaleOrdinal(colorList);
     }
 
 
@@ -580,9 +582,6 @@
             return key !== 'countryName' && key !== 'gini';
         });
 
-        var ginis = d3.keys(data[0]).filter(function (key) {
-            return key === 'gini';
-        });
 
 
         var years = [];
@@ -606,21 +605,52 @@
             }
         }
 
-        var orderedData = [];
 
 
-        // console.log(ginis);
-        // console.log(blockData);
+        var copy = [];
+
+        for (var k = 0; k < data.length; k++) {
+                oneCopy = Object.assign({}, data[k]);
+                copy.push(oneCopy);
+        }
+
+       // order data based on gini
+       var orderedData =  copy.sort(function(a, b) {
+            return parseFloat(a.gini) - parseFloat(b.gini);
+        });
+        console.log(orderedData);
+
+        // rebuild blockData with orderedData
+        var blockDataOrdered = [];
+
+        for (var m = 0; m < data.length; m++) {
+            var yy = 0;
+            years.push(data[m].countryName);
+            for (var b = 0; b < urbPerc.length; b++) {
+                height = parseFloat(data[m][urbPerc[b]]);
+                block =
+                    {
+                        'y0': parseFloat(yy),
+                        'y1': parseFloat(yy) + parseFloat(height),
+                        'height': height,
+                        'x': data[m].countryName,
+                        'countries': urbPerc[b]
+                    };
+                y += parseFloat(data[m][urbPerc[b]]);
+                blockDataOrdered.push(block);
+            }
+        }
+
+        //console.log(blockDataOrdered);
 
         return {
             blockData: blockData,
             years: years,
             urbPerc: urbPerc,
-            ginis: ginis
-        };
+            blockDataOrdered: blockDataOrdered
+        }
 
-
-    }
+    } // end of formatData function
 
 
 
