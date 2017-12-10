@@ -4,38 +4,30 @@
 <html>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js"></script>
+<script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="style.css" >
+<script src="texts.js"></script>
+
 
 <style>
 
 </style>
 
 <body>
+<h1>African Cities</h1>
+<h3>URBAN DEVELOPMENT IN SUBSAHARAN AFRICA</h3>
+    <p> <input type="checkbox" id="myCheckbox">   Compare urban population share before and after 1976</p>
+    <!--<p> <input type="checkbox" id="checkboxPop">   Compare urban population share before and after 1976</p>-->
+    <svg></svg>
 
-<div class="box box--one" id="box-one">
-    <h1>African Cities</h1>
-    <h3>URBAN DEVELOPMENT IN SUBSAHARAN AFRICA</h3>
-</div>
-
-<div class="box box--two">
-    <div id="wid">As world population continues to grow, an increasing number of people are moving to cities aspiring better living conditions, higher quality education and greater economic opportunities. <br> <br>In 2008, for the first time in human history, half of the world’s population lived in towns and cities. Africa is currently the least urbanized continent, <br> but its urbanization rate of 3.5 percent per year is the fastest in the world. <br> In 1980, only 28 percent of Africans lived in urban areas. Today, the number of Africans living in cities is 40 percent, and is projected to grow to 50 percent by 2030. As this has immediate social-economic impacts, it is interesting to investigate the relation between urbanization data and inequality trends. Find below a visualization of the urbanization rate, overall and per Gini-category. </div>
-</div>
-<br>
-<br>
-
-
-
-    <p> <input type="checkbox" id="myCheckbox">   Compare urbanization over the last 30 urbPerc and before: urban population as % of total before and after 1976 </p>
-        <svg></svg>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js"></script>
-        <script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="style.css" >
     <script>
 
-    var dataFile = 'data2.csv';
+    var dataFile = './maps/data3.csv';
 
     d3.csv(dataFile, function(error, data){
-        var input = {'data': data, 'width': 1000, 'height': 550};
+        var input = {'data': data, 'width': 1100, 'height': 550};
             canvas = setUpSvgCanvas(input);
 
         drawBars(input, canvas);
@@ -49,7 +41,7 @@
         var params = {'input': input, 'canvas': canvas};
         initialize(params);
         update(params);
-        update1(params);
+        // update1(params);
     }
 
 
@@ -70,6 +62,10 @@
             blockDataOrdered = params.blockDataOrdered = formattedData.blockDataOrdered,
             years = params.years = formattedData.years,
             urbPerc = params.urbPerc = formattedData.urbPerc;
+
+        // to sort data by population
+        var formattedData2 = formatData1(input.data),
+            blockDataOrderedByPop = params.blockDataOrderedByPop = formattedData2.blockDataOrderedByPop;
 
 
         // initialize color
@@ -98,10 +94,7 @@
             .attr('height', 0)
             .attr('fill', function(d){ return color(d.countries);});
 
-        // heights is a dictionary to store bar height by countries
-        // this hierarchy is important for animation purposes
-        // each bar above the chosen bar must collapse to the top of the
-        // selected bar, this function defines this top
+        // bar height for each countries
         params.heights = setUpHeights(urbPerc, blockDataOrdered);
 
         // defining max of each bin to convert later to percentage
@@ -288,7 +281,137 @@
                     0);});
     } // end of first update
 
+    function update1(params){
 
+        // retrieving params to avoid putting params.x everywhere
+        var svg = params.canvas.svg,
+            margin = params.canvas.margin,
+            y = params.y,
+            blockDataOrdered = params.blockDataOrdered,
+            heights = params.heights,
+            chosen = params.chosen,
+            width = params.width,
+            height = params.height,
+            bar = params.bar,
+            urbPerc = params.urbPerc,
+            years = params.years,
+            legend = params.legend,
+            maxPerBin = params.maxPerBin,
+            view = params.view;
+
+        var transDuration = 1030;
+
+        // re-scaling data if view is changed to percentage
+        // and re-scaling back if normal view is selected
+        var newView = d3.select("#myCheckbox").property("checked");
+
+        if(newView){
+            if(view !== newView){
+                blockDataOrdered.forEach(function (d){
+                    d.y0 /= maxPerBin[d.x];
+                    d.y1 /= maxPerBin[d.x];
+                    d.height /= maxPerBin[d.x];
+                });
+                heights = setUpHeights(urbPerc, blockDataOrdered);
+
+                //update y-axis description
+                d3.select(".descrAxisY")
+                    .text("Total urban population since 1976");
+            }
+        }
+        else{
+            if(view !== newView){
+                blockDataOrdered.forEach(function (d){
+                    d.y0 *= maxPerBin[d.x];
+                    d.y1 *= maxPerBin[d.x];
+                    d.height *= maxPerBin[d.x];
+                });
+                heights = setUpHeights(urbPerc, blockDataOrdered);
+            }
+        }
+        params.view = newView;
+
+
+        // update Y axis
+        if(chosen.countries == null){
+            y.domain([0, d3.max(blockDataOrdered, function(d) { return d.y1; })]);
+        }
+        else{
+            y.domain([0, d3.max(heights[chosen.countries])]);
+        }
+
+        if(newView){
+            y.domain([0, 1]);
+        }
+
+        var axisY = d3.axisLeft(y)
+            .tickSize(-width)
+            .tickFormat(function(d) { return d + "%"; });
+        // .tickFormat(d3.format(".0%"));
+
+        if(newView){
+            axisY.tickFormat(d3.format(".0%"));
+        }
+
+        svg.selectAll('.axisY')
+            .transition()
+            .duration(transDuration)
+            .call(axisY);
+
+
+        // update legend
+        legend.selectAll('rect')
+            .transition()
+            .duration(transDuration)
+            .attr('height', function(d) {return choice(chosen.countries, d, 18, 18, 0);})
+            .attr('y', function(d) {
+                var i = urbPerc.indexOf(d);
+                if (i > urbPerc.indexOf(chosen.countries)){
+                    return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0, 0);
+                }
+                else {
+                    return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0,  18);
+                }
+            });
+        legend.selectAll('text')
+            .transition()
+            .duration(transDuration)
+            .attr('y', function(d) {
+                var i = urbPerc.indexOf(d);
+                if (i > urbPerc.indexOf(chosen.countries)){
+                    return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0, 0);
+                }
+                else {
+                    return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0,  1);
+                }
+            })
+            .style('font-size' ,function(d, i) {return choice(chosen.countries, d, '16px', '16px', '0px');})
+            .attr('x', function(d) {return choice(chosen.countries, d,
+                width + margin.right - 25,
+                width + margin.right - 25,
+                width + margin.right - 25 - this.getComputedTextLength()/2);});
+
+
+
+        // update bars
+        bar.selectAll('rect')
+            .on('click', function(d){
+                chosen.countries = chosen.countries === d.countries ? null : d.countries;
+                update(params);
+            })
+            .transition()
+            .duration(transDuration)
+            .attr('y', function(d) {
+                return choice(chosen.countries, d.countries,
+                    y(d.y1),
+                    y(d.height),
+                    myHeight(chosen, d, urbPerc, years, y, heights));})
+            .attr('height', function(d) {
+                return choice(chosen.countries, d.countries,
+                    height - y(d.height),
+                    height - y(d.height),
+                    0);});
+    } // end of first update
 
     // heights is a dictionary to store bar height by countries
     // this hierarchy is important for animation purposes
@@ -410,24 +533,26 @@
     function formatData(data) {
 
         var urbPerc = d3.keys(data[0]).filter(function (key) {
-            return key !== 'countryName' && key !== 'gini';
+            return key === '2016' || key === '1976';
         });
-
 
 
         var years = [];
-        var copy = [];
 
+        // copy for ordering
+        var copy = [];
         for (var k = 0; k < data.length; k++) {
-                oneCopy = Object.assign({}, data[k]);
-                copy.push(oneCopy);
+            oneCopy = Object.assign({}, data[k]);
+            copy.push(oneCopy);
         }
 
-       // order data based on gini
-       var orderedData =  copy.sort(function(a, b) {
+        // order data based on gini
+        var orderedData =  copy.sort(function(a, b) {
             return parseFloat(a.gini) - parseFloat(b.gini);
         });
         // console.log(orderedData);
+
+
 
         // rebuild blockData with orderedData
         var blockDataOrdered = [];
@@ -450,7 +575,7 @@
             }
         }
 
-        console.log(blockDataOrdered);
+        // console.log(blockDataOrdered);
 
         return {
             blockDataOrdered: blockDataOrdered,
@@ -462,9 +587,100 @@
 
 
 
+    // formatting Data to a more d3-friendly format
+    // extracting countries and urbPerc
+    function formatData1(data) {
+
+        var urbPerc = d3.keys(data[0]).filter(function (key) {
+            return key === '2016' || key === '1976';
+        });
+
+
+        var years = [];
+
+        // copy for ordering
+        var copy = [];
+        for (var k = 0; k < data.length; k++) {
+            oneCopy = Object.assign({}, data[k]);
+            copy.push(oneCopy);
+        }
+
+        // order data based on gini
+        var orderedData =  copy.sort(function(a, b) {
+            return parseFloat(a['2016_']) - parseFloat(b['2016_']);
+        });
+        // console.log(orderedData);
 
 
 
-        </script>
+        // rebuild blockData with orderedData
+        var blockDataOrderedByPop = [];
+
+        for (var m = 0; m < orderedData.length; m++) {
+            var y = 0;
+            years.push(orderedData[m].countryName);
+            for (var b = 0; b < urbPerc.length; b++) {
+                height = parseFloat(orderedData[m][urbPerc[b]]);
+                block =
+                    {
+                        'y0': parseFloat(y),
+                        'y1': parseFloat(y) + parseFloat(height),
+                        'height': height,
+                        'x': orderedData[m].countryName,
+                        'countries': urbPerc[b]
+                    };
+                y += parseFloat(orderedData[m][urbPerc[b]]);
+                blockDataOrderedByPop.push(block);
+            }
+        }
+
+        console.log(blockDataOrderedByPop);
+
+        return {
+            blockDataOrderedByPop: blockDataOrderedByPop,
+            years: years,
+            urbPerc: urbPerc
+        }
+
+    } // end of formatData function
+
+
+
+
+
+
+
+    </script>
+
+
+<div class="box box--one" id="box-one">
+
+</div>
+
+<div class="box box--two">
+    <!--<div id="wid">As world population continues to grow, an increasing number of people are moving to cities aspiring better living conditions, higher quality education and greater economic opportunities. <br> <br>In 2008, for the first time in human history, half of the world’s population lived in towns and cities. Africa is currently the least urbanized continent, <br> but its urbanization rate of 3.5 percent per year is the fastest in the world. <br> In 1980, only 28 percent of Africans lived in urban areas. Today, the number of Africans living in cities is 40 percent, and is projected to grow to 50 percent by 2030. <br> As this has immediate social-economic impacts, it is interesting to investigate the relation between urbanization data and inequality trends. Find below a visualization of the urbanization rate, overall and per Gini-category. </div>-->
+
+    <div class="content">
+        <div class="content__container">
+            <p class="content__container__text">
+                KAJld
+            </p>
+
+            <ul class="content__container__list">
+                <li class="content__container__list__item">abc !</li>
+                <li class="content__container__list__item">dba !</li>
+                <li class="content__container__list__item">lksdjflaksjdf!</li>
+                <li class="content__container__list__item"><laksjdflaksjdf></laksjdflaksjdf>y !</li>
+            </ul>
+            <!--<p class="content__container__text">-->
+                <!--KAJldfkjsldkfjasd-->
+            <!--</p>-->
+
+        </div>
+    </div>
+
+</div>
+
+
     </body>
 </html>
