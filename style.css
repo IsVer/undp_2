@@ -1,0 +1,60 @@
+.box {
+    /*max-width: 100%;*/
+    /*max-height: 100%;*/
+    margin: 0 auto;
+    padding: 50px;
+}
+
+.box--one {
+    min-height: 400px;
+    background: url("https://www.afidep.org/wp-content/uploads/2017/11/Joburg.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 95%;
+    height: 100px;
+}
+
+.box--two {
+    column-count: 2;
+    column-gap: 20px;
+    background-color: rgba(255, 255, 255, 0.59);
+    position: relative;
+    z-index: 1;
+    width: 95%;
+    /*text-align: justify;*/
+
+}
+
+.box--three {
+
+    column-gap: 30px;
+    background-color: rgba(255, 255, 255, 0.59);
+    position: relative;
+    z-index: 1;
+    width: 95%;
+
+}
+
+
+#wid {
+    -moz-column-width: 260px;
+    -webkit-column-width: 260px;
+    column-width: 260px;
+}
+
+
+
+h1 {
+    margin: 60px;
+    font-size: 38px;
+    font-family: 'Lora', serif;
+    color: white;
+}
+
+h3 {
+    margin: 60px;
+    color: white;
+    font-size: 13px;
+}
