@@ -7,8 +7,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js"></script>
 <script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css?family=Bungee|Fjalla+One|Karla|Marvel|Rajdhani|Ruda|Source+Sans+Pro" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="style.css" >
-<script src="texts.js"></script>
 
 
 <style>
@@ -16,18 +16,25 @@
 </style>
 
 <body>
-<h1>African Cities</h1>
-<h3>URBAN DEVELOPMENT IN SUBSAHARAN AFRICA</h3>
-    <p> <input type="checkbox" id="myCheckbox">   Compare urban population share before and after 1976</p>
+<!--<h1>African Cities</h1>-->
+<h1>URBAN DEVELOPMENT IN SUBSAHARAN AFRICA</h1>
+
+<h3>Can we see a relation between urbanization and inequality?</h3>
+
+
+
+    <p id="compareButtonText"> <input type="checkbox" id="myCheckbox">   Compare urban population share before and after 1976</p>
     <!--<p> <input type="checkbox" id="checkboxPop">   Compare urban population share before and after 1976</p>-->
-    <svg></svg>
 
-    <script>
+<svg> </svg>
 
-    var dataFile = 'data3.csv';
+
+<script>
+
+    var dataFile = './maps/data3.csv';
 
     d3.csv(dataFile, function(error, data){
-        var input = {'data': data, 'width': 1100, 'height': 550};
+        var input = {'data': data, 'width': 1100, 'height': 510};
             canvas = setUpSvgCanvas(input);
 
         drawBars(input, canvas);
@@ -63,9 +70,9 @@
             years = params.years = formattedData.years,
             urbPerc = params.urbPerc = formattedData.urbPerc;
 
-        // to sort data by population
-        var formattedData2 = formatData1(input.data),
-            blockDataOrderedByPop = params.blockDataOrderedByPop = formattedData2.blockDataOrderedByPop;
+        // // to sort data by population
+        // var formattedData2 = formatData1(input.data),
+        //     blockDataOrderedByPop = params.blockDataOrderedByPop = formattedData2.blockDataOrderedByPop;
 
 
         // initialize color
@@ -126,10 +133,20 @@
 
         // text for legend:
         legend.append('text')
-            .attr('x', width + margin.right - 25)
-            .attr('y', function(d, i) { return 20 * (urbPerc.length - 1 - i) ;})
-            .text(function(d) {return d;})
-            .attr('dy', '.95em')
+            .attr('x', width + margin.right)
+            // .attr('x', width + 100)
+            // .attr('y', function(d, i) { return 10 * (urbPerc.length - 1 - i) ;})
+            .attr('y', 90)
+            .attr('class', "legendsText")
+            .text(function(d) {
+                if (d === "2016")
+                    {return "after 1976"}
+                else
+                {return "until " + d}
+            })
+            .attr('dy', '.85em')
+            .attr('dx', '.05em')
+            .style('font-size', "10px")
             .style('text-anchor', 'end');
 
         // text for y-axis
@@ -140,6 +157,16 @@
             .attr("dy", "-3em")
             .style("text-anchor", "end")
             .text("Urban population as % of total");
+
+
+        // text for the x axis
+        svg.append("text")
+            .attr("class", "descrAxisY")
+            .attr("transform",
+                "translate(" + (width/2) + " ," +
+                (height + margin.top + 72) + ")")
+            .style("text-anchor", "middle")
+            .text("Subsaharan countries from from lowest to highest income inequality (Gini)");
 
         // initialize checkbox options
         d3.select("#myCheckbox").on("change",function(){update(params);});
@@ -253,7 +280,7 @@
                     return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i) , 0,  1);
                 }
             })
-            .style('font-size' ,function(d, i) {return choice(chosen.countries, d, '16px', '16px', '0px');})
+            .style('font-size' ,function(d, i) {return choice(chosen.countries, d, '13px', '13px', '0px');})
             .attr('x', function(d) {return choice(chosen.countries, d,
                 width + margin.right - 25,
                 width + margin.right - 25,
@@ -411,7 +438,7 @@
                     height - y(d.height),
                     height - y(d.height),
                     0);});
-    } // end of first update
+    } // end of second update TO DO
 
     // heights is a dictionary to store bar height by countries
     // this hierarchy is important for animation purposes
@@ -502,13 +529,14 @@
 
     function setUpSvgCanvas(input) {
         // Set up the svg canvas
-        var margin = {top: 20, right: 80, bottom: 100, left: 80},
+        var margin = {top: 8, right: 80, bottom: 100, left: 80},
             width = input.width - margin.left -margin.right,
             height = input.height - margin.top -margin.bottom;
 
         var svg = d3.select('svg')
             .attr('width', width + margin.left + margin.right )
             .attr('height', height + margin.top +margin.bottom )
+            .attr('id', 'chart1')
             .append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -523,7 +551,7 @@
 
     function setUpColors() {
         // return d3.scaleOrdinal(d3.schemeSet1);
-        colorList = ["#cec6b9", '#6B6B6B'];
+        colorList = ['#6B6B6B', "#cec6b9"];
         return d3.scaleOrdinal(colorList);
     }
 
@@ -585,102 +613,35 @@
 
     } // end of formatData function
 
+</script>
 
-
-    // formatting Data to a more d3-friendly format
-    // extracting countries and urbPerc
-    function formatData1(data) {
-
-        var urbPerc = d3.keys(data[0]).filter(function (key) {
-            return key === '2016' || key === '1976';
-        });
-
-
-        var years = [];
-
-        // copy for ordering
-        var copy = [];
-        for (var k = 0; k < data.length; k++) {
-            oneCopy = Object.assign({}, data[k]);
-            copy.push(oneCopy);
-        }
-
-        // order data based on gini
-        var orderedData =  copy.sort(function(a, b) {
-            return parseFloat(a['2016_']) - parseFloat(b['2016_']);
-        });
-        // console.log(orderedData);
-
-
-
-        // rebuild blockData with orderedData
-        var blockDataOrderedByPop = [];
-
-        for (var m = 0; m < orderedData.length; m++) {
-            var y = 0;
-            years.push(orderedData[m].countryName);
-            for (var b = 0; b < urbPerc.length; b++) {
-                height = parseFloat(orderedData[m][urbPerc[b]]);
-                block =
-                    {
-                        'y0': parseFloat(y),
-                        'y1': parseFloat(y) + parseFloat(height),
-                        'height': height,
-                        'x': orderedData[m].countryName,
-                        'countries': urbPerc[b]
-                    };
-                y += parseFloat(orderedData[m][urbPerc[b]]);
-                blockDataOrderedByPop.push(block);
-            }
-        }
-
-        console.log(blockDataOrderedByPop);
-
-        return {
-            blockDataOrderedByPop: blockDataOrderedByPop,
-            years: years,
-            urbPerc: urbPerc
-        }
-
-    } // end of formatData function
-
-
-
-
-
-
-
-    </script>
 
 
 <div class="box box--one" id="box-one">
 
 </div>
 
-<div class="box box--two">
-    <!--<div id="wid">As world population continues to grow, an increasing number of people are moving to cities aspiring better living conditions, higher quality education and greater economic opportunities. <br> <br>In 2008, for the first time in human history, half of the world’s population lived in towns and cities. Africa is currently the least urbanized continent, <br> but its urbanization rate of 3.5 percent per year is the fastest in the world. <br> In 1980, only 28 percent of Africans lived in urban areas. Today, the number of Africans living in cities is 40 percent, and is projected to grow to 50 percent by 2030. <br> As this has immediate social-economic impacts, it is interesting to investigate the relation between urbanization data and inequality trends. Find below a visualization of the urbanization rate, overall and per Gini-category. </div>-->
+<!--<div class="box box&#45;&#45;two">-->
+    <!--&lt;!&ndash;<div id="wid">As world population continues to grow, an increasing number of people are moving to cities aspiring better living conditions, higher quality education and greater economic opportunities. <br> <br>In 2008, for the first time in human history, half of the world’s population lived in towns and cities. Africa is currently the least urbanized continent, <br> but its urbanization rate of 3.5 percent per year is the fastest in the world. <br> In 1980, only 28 percent of Africans lived in urban areas. Today, the number of Africans living in cities is 40 percent, and is projected to grow to 50 percent by 2030. <br> As this has immediate social-economic impacts, it is interesting to investigate the relation between urbanization data and inequality trends. Find below a visualization of the urbanization rate, overall and per Gini-category. </div>&ndash;&gt;-->
 
-    <div class="content">
-        <div class="content__container">
-            <p class="content__container__text">
-                KAJld
-            </p>
-
-            <ul class="content__container__list">
-                <li class="content__container__list__item">abc !</li>
-                <li class="content__container__list__item">dba !</li>
-                <li class="content__container__list__item">lksdjflaksjdf!</li>
-                <li class="content__container__list__item"><laksjdflaksjdf></laksjdflaksjdf>y !</li>
-            </ul>
+    <!--<div class="content">-->
+        <!--<div class="content__container">-->
             <!--<p class="content__container__text">-->
-                <!--KAJldfkjsldkfjasd-->
+                <!--Factors associated with inequality affected by the urbanization rate-->
             <!--</p>-->
+            <!--<ul class="content__container__list">-->
+                <!--<li class="content__container__list__item">abc !</li>-->
+                <!--<li class="content__container__list__item">dba !</li>-->
+                <!--<li class="content__container__list__item">lksdjflaksjdf!</li>-->
+                <!--<li class="content__container__list__item"><laksjdflaksjdf></laksjdflaksjdf>y !</li>-->
+            <!--</ul>-->
 
-        </div>
-    </div>
+        <!--</div>-->
+    <!--</div>-->
 
-</div>
+<!--</div>-->
 
 
     </body>
 </html>
+NOr
