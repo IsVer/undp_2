@@ -19,4 +19,4 @@ In 1980, only 28 percent of Africans lived in urban areas. Today, the number of 
 - [UN World Urbanization Prospects](https://esa.un.org/unpd/wup/publications/files/wup2014-highlights.pdf). The 2014 Revision, UN Department of Economic and Social Affairs, Population Devision (2014)
 - [African Economic Outlook](http://www.africaneconomicoutlook.org/en) (2016 and 2017
 - Data on relative urbanization growth, [World bank](https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS?locations=ZG) (2017)
-- [Urbanization In The Agenda For Inclusive Growth And Sustainable Development](https://econplus.wordpress.com/2017/01/25/urbanization-in-the-agenda-for-inclusive-growth-and-sustainable-development/), Pedro Sousa (2017)
+- [Urbanization In The Agenda For Inclusive Growth And Sustainable Development](https://econplus.wordpress.com/2017/01/25/urbanization-in-the-agenda-for-inclusive-growth-and-sustainable-development/), ECON+, Pedro Sousa (2017)
