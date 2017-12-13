@@ -3,12 +3,27 @@
 <title>MS-1 UNDP </title>
 <html>
 
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">-->
 
+<!--load bootstrap and jkwerri -->
+
+<!--load d3 and the fonts-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js"></script>
-<script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
+
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">-->
+<!--<link rel='stylesheet' href='bootstrap.min.css'>-->
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>-->
+
+
+
+<!--style sheet -->
+
 <link href="https://fonts.googleapis.com/css?family=Bungee|Fjalla+One|Karla|Marvel|Rajdhani|Ruda|Source+Sans+Pro" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="style.css" >
+
 
 
 <style>
@@ -16,10 +31,43 @@
 </style>
 
 <body>
-<!--<h1>African Cities</h1>-->
-<h1>URBAN DEVELOPMENT IN SUBSAHARAN AFRICA</h1>
 
-<h3>Can we see a relation between urbanization and inequality?</h3>
+
+
+<div class="box box--one" id="box-one" class = "overlay">
+
+    <div class="box box--two" id="box-two">
+
+        <h1>URBAN DEVELOPMENT IN SUBSAHARAN AFRICA</h1>
+
+        <h3>Can we see a relationship between urbanization and inequality trends?</h3>
+
+
+
+        <div class="iconJos">
+            <img class="iconJo" src="Asset 1ldpi.png" height="10" width="10"/>
+            <p class="img__description">Photo: Nairobi, Africa's 14th largest city with 6.54 million people (Credits: Siegfried Modola/IRIN)</p>
+        </div>
+
+        </div>
+</div>
+
+
+<div class="textIntro">
+    <p>We live on an increasingly urban planet. As highlighted by the Sustainable Development Goal 11 of Agenda 2030, cities are crucial to the future development of the world, especially to Africa. From 2017, Africa has more urban dwellers than Europe and is expected to have an urbanization share of 60% by 2050 (AFIDEP).<p>
+
+    <p>The image of a rural Africa characterized by small villages and farm land is increasingly to be replaced by tall skylines of mega cities – an Africa that is the center of global urbanization. <br> This takes place in a larger context of significant population changes in Africa, that will shape the global demographic landscape. </p>
+
+    <p>Ayodele Odusola et al. (2017) point out that Africa will account for 82.8 per cent of the world’s net population change over the period between 2015 and 2100. Africa’s population will have increased by about 3.7 billion by the next century, from 1.19 in 2015 to 4.39 in 2100 – which stands in contrast to many other parts of the world that experience a long-term decline in population growth rates or even negative growth. Crucially, Africa’s population structure is transforming as well. Besides the largest population share, Africa also will have youngest population in the world.</p>
+
+    <p>As described by Ayodele Odusola et al. (2017), these demographic developments are heavily influenced by factors around health (such as declining infant mortality, fertility, prevalence of HIV/AIDS), education and other social-economic circumstances. Vice versa, the demographic developments of population growth, population structure and urbanization also influence the future development of Africa. Investments in sustainable urbanization and youth development are key to unlock the wealth of human capital that Africa represents. </p>
+
+    <p>The various aspects and forms of demographic transformation complicate the link between population variables and inequality. This visualization focuses on urbanization as a key determinant in Africa’s current and future development; where urbanization creates challenges as well as opportunities.</p>
+
+</div>
+
+
+
 
     <p id="compareButtonText"> <input type="checkbox" id="myCheckbox">   Compare urban population share before and after 1976</p>
     <!--<p> <input type="checkbox" id="checkboxPop">   Compare urban population share before and after 1976</p>-->
@@ -32,7 +80,7 @@
     var dataFile = 'data3.csv';
 
     d3.csv(dataFile, function(error, data){
-        var input = {'data': data, 'width': 1100, 'height': 510};
+        var input = {'data': data, 'width': 0.8*window.innerWidth, 'height': window.innerHeight*0.8};
             canvas = setUpSvgCanvas(input);
 
         drawBars(input, canvas);
@@ -49,6 +97,9 @@
         // update1(params);
     }
 
+    //////////:TO DO ////////////////////
+    // addToolTip(svg);
+    /////////////
 
     function initialize(params) {
 
@@ -101,6 +152,15 @@
             .attr('fill', function(d){ return color(d.countries);})
             .attr('id', function(d){
                 return d.x + "_"
+            })
+            .on("mouseover", function (d) {
+                return showToolTip(d)
+            })
+            .on("mouseout", function (d) {
+                return hideToolTip(d)
+            })
+            .on("mousemove", function (d) {
+                return updateTooltip(d)
             });
 
         // bar height for each countries
@@ -557,6 +617,73 @@
         return d3.scaleOrdinal(colorList);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////test//////////////////////////////
+
+    function addToolTip(svg) {
+
+        var tooltip = svg.append("g")
+            .attr("class", "tooltip")
+            .attr("id", function (d) {
+                return "tooltip_" + d.id
+            })
+            .style("opacity", 0.0);
+
+        tooltip.append("rect")
+            .attr("width", 0.5 * width)
+            .attr("height", 0.5 * height)
+            .style('pointer-events', 'all')
+            .attr("fill", "#ffe928")
+            .style("opacity", 0.9);
+
+        tooltip.append("text")
+            .attr("x", 30)
+            .attr("dy", "1.2em")
+            .style("text-anchor", "middle")
+            .style("z-index", "3")
+            .attr("font-size", "12px")
+            .attr("font-weight", "bold")
+            .text(function(d) {
+                // console.log(d);
+                return "something"});
+
+        tooltip.append('line')
+            .classed('x', true);
+
+        tooltip.append('line')
+            .classed('y', true);
+    }
+
+
+    function showToolTip(d) {
+        d3.selectAll("#tooltip_" + d.id)
+            .style("opacity", 1.0);
+
+        d3.select("#line_" + d.id)
+            .style("stroke", "#ffc51b");
+    }
+
+    function hideToolTip(d) {
+        d3.selectAll("#tooltip_" + d.id)
+            .style("opacity", .0);
+
+        d3.select("#line_" + d.id)
+            .style("stroke", "#cec6b9");
+    }
+
+
+    function updateTooltip(d, i) {
+        //     let data1Point = d.values[i];
+        // console.log(data1Point, i, d);
+        d3.selectAll("#tooltip_" + d.id)
+            .style("opacity", 0.6);
+
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     // formatting Data to a more d3-friendly format
     // extracting countries and urbPerc
@@ -618,11 +745,6 @@
 </script>
 
 
-
-<div class="box box--one" id="box-one">
-
-</div>
-
 <!--<div class="box box&#45;&#45;two">-->
     <!--&lt;!&ndash;<div id="wid">As world population continues to grow, an increasing number of people are moving to cities aspiring better living conditions, higher quality education and greater economic opportunities. <br> <br>In 2008, for the first time in human history, half of the world’s population lived in towns and cities. Africa is currently the least urbanized continent, <br> but its urbanization rate of 3.5 percent per year is the fastest in the world. <br> In 1980, only 28 percent of Africans lived in urban areas. Today, the number of Africans living in cities is 40 percent, and is projected to grow to 50 percent by 2030. <br> As this has immediate social-economic impacts, it is interesting to investigate the relation between urbanization data and inequality trends. Find below a visualization of the urbanization rate, overall and per Gini-category. </div>&ndash;&gt;-->
 
@@ -643,6 +765,6 @@
 
 <!--</div>-->
 
+</body>
 
-    </body>
 </html>
