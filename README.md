@@ -16,6 +16,6 @@ In 1980, only 28 percent of Africans lived in urban areas. Today, the number of 
 
 ## Sources
 - [Income Inequality Trends in Sub-Saharan Africa: Divergence, Determinants, and Consequences](http://www.undp.org/content/undp/en/home/presscenter/pressreleases/2017/09/21/undp-launches-study-on-income-inequality-in-sub-saharan-africa.html), edited by Giovanni Andrea Cornia Ayodele Odusola, Haroon Bhorat, and Pedro Conceicao: United Nations Development Programme, 2017.
-- [UN World Urbanization Prospects](2014)(https://esa.un.org/unpd/wup/publications/files/wup2014-highlights.pdf)
-- [African Economic Outlook] (2016 and 2017)(http://www.africaneconomicoutlook.org/en)
+- [UN World Urbanization Prospects](https://esa.un.org/unpd/wup/publications/files/wup2014-highlights.pdf) (2014)
+- [African Economic Outlook](http://www.africaneconomicoutlook.org/en) (2016 and 2017
 - Data on relative urbanization growth, [World bank](https://data.worldbank.org/indicator/SP.URB.TOTL.IN.ZS?locations=ZG) (2017)
