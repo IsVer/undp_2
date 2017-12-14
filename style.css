@@ -5,11 +5,7 @@
     /*padding: 50px;*/
 }
 
-.overlay {
-    background: #1b1e21;
-    opacity: 0.7;
-    z-index: 2;
-}
+
 .box--one {
     min-height: 600px;
     background: url("Nairobi1.png");
@@ -22,7 +18,7 @@
 }
 
 .box--three {
-    min-height: 300px;
+    min-height: 100px;
     background: url("http://www.un.org/esa/ffd/wp-content/uploads/2016/08/451902.jpg");
     background-attachment: fixed;
     background-position: center;
@@ -53,7 +49,7 @@
     /*transform: scale(1.2);*/
 /*}*/
 
-.img__description, .img__description2{
+.img__description {
     color: #ffffff;
     opacity: 1;
     margin-top: 16em;
@@ -66,7 +62,11 @@
 }
 
 .img__description2{
-    margin-top: 15em;
+    /*margin-top: 30em;*/
+    font-family: 'Rajdhani', sans-serif;
+    font-size:  12px;
+    color: #ffffff;
+    margin-left: 0.5em;
 }
 .iconJo:hover .img__description {
     /*transform: translateY(0);*/
@@ -117,6 +117,25 @@ h2 {
 
 }
 
+#titleBeforeSecondGraph{
+    vertical-align: center;
+    color: #ffffff;
+    font-weight:bold;
+}
+
+
+.box--four {
+    column-count: 1;
+    column-gap: 20px;
+    /*background-color: rgba(255, 255, 255, 0.59);*/
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100px;
+    /*text-align: justify;*/
+}
+
+
 .textIntro {
     /*column-width: 20em;*/
     column-width: 35ch;
@@ -125,10 +144,16 @@ h2 {
         /*// 35ch = 45 to 60 characters*/
     column-gap:3em;
     padding-top: 5em;
-    padding-bottom: 10em;
+    padding-bottom: 3em;
     padding-left: 3em;
     padding-right: 3em;
     text-align: justify;
+}
+
+#thirdTitle{
+    text-align: center;
+    color: #2e3133;
+    font-size: 20px;
 }
 
 .undpBook{
@@ -211,3 +236,15 @@ svg {
 }
 
 
+.textExplanation{
+    column-width: 35ch;
+    font-family: 'Rajdhani', sans-serif;
+    /*// use actual letter width for this font*/
+    /*// 35ch = 45 to 60 characters*/
+    column-gap:3em;
+    padding-top: 5em;
+    padding-bottom: 3em;
+    padding-left: 3em;
+    padding-right: 3em;
+    text-align: justify;
+}

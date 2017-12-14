@@ -57,7 +57,7 @@
     // LOAD DATA
     //============================================================
 
-    var dataFile = 'data2.csv';
+    var dataFile = 'data4.csv';
 
 
     d3.csv(dataFile, function(error, data){
@@ -169,7 +169,7 @@
         legend.append('rect')
             /// .attr('x', width + margin.right - 18)
         // .attr('y', function(d, i) {return 20 * (urbPerc.length - 80 - i);})
-            .attr('x', width + margin.right - 50)
+            .attr('x', width + margin.right - 18)
             .attr('y', height - 100)
             .attr('height', 50)
             .attr('width', 50)
@@ -181,18 +181,12 @@
 
         // text for legend:
         legend.append('text')
-
             .attr('x', width - margin.right + 100) // the good one
             .attr('y', 90) // the good one
             // .attr('x', width + 100)
             // .attr('y', function(d, i) { return 10 * (urbPerc.length - 1 - i) ;})
             .attr('class', "legendsText")
-            .text(function(d) {
-                if (d === "2016")
-                    {return "after 1976"}
-                else
-                {return "until " + d}
-            })
+            .text(function(d) {return d;})
             .attr('dy', '1.5em')
             .attr('dx', '.05em')
             .style('text-anchor', 'end');
@@ -306,14 +300,14 @@
         legend.selectAll('rect')
             .transition()
             .duration(transDuration)
-            .attr('height', function(d) {return choice(chosen.countries, d, 50, 50, 0);})
+            .attr('height', function(d) {return choice(chosen.countries, d, 18, 18, 0);})
             .attr('y', function(d) {
                 var i = urbPerc.indexOf(d);
                 if (i > urbPerc.indexOf(chosen.countries)){
-                    return choice(chosen.countries, d, (60 * (urbPerc.length - 1 - i)), 0, 0);
+                    return choice(chosen.countries, d, (20 * (urbPerc.length - 1 - i)), 0, 0);
                 }
                 else {
-                    return choice(chosen.countries, d, (60 * (urbPerc.length - 1 - i)), 0,  50);
+                    return choice(chosen.countries, d, (20 * (urbPerc.length - 1 - i)), 0,  50);
                 }
             })
             .attr("transform", "translate(" + 0 + "," + 15 + ")");
@@ -326,17 +320,17 @@
             .attr('y', function(d) {
                 var i = urbPerc.indexOf(d);
                 if (i > urbPerc.indexOf(chosen.countries)){
-                    return choice(chosen.countries, d, (70 * (urbPerc.length - 1 - i)), -1, 2);
+                    return choice(chosen.countries, d, (20 * (urbPerc.length - 1 - i)), 1, 2);
                 }
                 else {
-                    return choice(chosen.countries, d, 100 * (urbPerc.length - 1 - i), -5,  1);
+                    return choice(chosen.countries, d, 20 * (urbPerc.length - 1 - i), 1,  1);
                 }
             })
-            .style('font-size' ,function(d, i) {return choice(chosen.countries, d, '30px', '30px', '0px');})
+            .style('font-size' ,function(d, i) {return choice(chosen.countries, d, '20px', '20px', '0px');})
             // .style("transform",function(d, i) {return choice(chosen.countries, d, "translate(0px,0px)", "translate(0px,1000px)");})
             .attr('x', function(d) {return choice(chosen.countries, d,
-                width + margin.right - 60,
-                width + margin.right - 60,
+                width + margin.right - 30,
+                width + margin.right - 30,
                 width + margin.right - this.getComputedTextLength()/2);});
 
 
