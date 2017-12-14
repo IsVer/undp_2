@@ -119,7 +119,8 @@ h2 {
 
 #titleBeforeSecondGraph{
     vertical-align: center;
-    color: #ffffff;
+    /*color: #ffffff;*/
+    visibility: hidden;
     font-weight:bold;
 }
 
