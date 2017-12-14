@@ -21,6 +21,17 @@
     height: 100%;
 }
 
+.box--three {
+    min-height: 300px;
+    background: url("http://www.un.org/esa/ffd/wp-content/uploads/2016/08/451902.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
 /*info icon for picture*/
 .iconJos{
     position: absolute;
@@ -42,8 +53,8 @@
     /*transform: scale(1.2);*/
 /*}*/
 
-.img__description {
-    color: #cec6b9;
+.img__description, .img__description2{
+    color: #ffffff;
     opacity: 1;
     margin-top: 16em;
     margin-left: 0.5em;
@@ -52,6 +63,10 @@
     font-size:  12px;
     /*transform: translateY(1em);*/
     /*position: relative;*/
+}
+
+.img__description2{
+    margin-top: 15em;
 }
 .iconJo:hover .img__description {
     /*transform: translateY(0);*/
@@ -124,11 +139,11 @@ h2 {
     color: black;
 }
 
-.tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black;
-}
+/*.tooltip {*/
+    /*position: relative;*/
+    /*display: inline-block;*/
+    /*border-bottom: 1px dotted black;*/
+/*}*/
 
 .tooltiptext {
     visibility: hidden;
@@ -146,9 +161,9 @@ h2 {
     visibility: visible;
 }
 
-.tooltip {
-    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
+/*.tooltip {*/
+    /*border-bottom: 1px dotted black; !* If you want dots under the hoverable text *!*/
+/*}*/
 
 
 
@@ -165,7 +180,7 @@ h2 {
 
 #compareButtonText {
     font-family: 'Rajdhani', sans-serif;
-    padding-left: 10%;
+    padding-left: 9%;
     float: left;
 }
 
@@ -189,149 +204,10 @@ svg {
     font-family: 'Rajdhani', sans-serif;
 }
 
+
 .axisX, .axisY {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 13px;
+    font-size: 15px;
 }
 
-
-
-
-
-
-
-    /*!*for the appearing texts *!*/
-
-/*.content {*/
-    /*position: absolute;*/
-    /*top: 15px;*/
-    /*left: 10%;*/
-    /*!*-webkit-transform: translate(-50%, -50%);*!*/
-    /*!*transform: translate(-50%, -50%);*!*/
-    /*overflow: hidden;*/
-    /*font-family: 'Rajdhani', sans-serif;*/
-    /*font-size: 16px;*/
-    /*line-height: 40px;*/
-    /*color: #5f595c;*/
-/*}*/
-/*.content__container {*/
-    /*font-weight: 100;*/
-    /*overflow: hidden;*/
-    /*height: 40px;*/
-
-    /*padding: 0 40px;*/
-/*}*/
-/*!*.content__container:before {*!*/
-    /*!*!*content: '[';*!*!*/
-    /*!*left: 0;*!*/
-/*!*}*!*/
-/*!*.content__container:after {*!*/
-    /*!*!*content: ']';*!*!*/
-    /*!*position: absolute;*!*/
-    /*!*right: 0;*!*/
-/*!*}*!*/
-/*.content__container:after, .content__container:before {*/
-    /*position: absolute;*/
-    /*top: 0;*/
-    /*opacity: 0;*/
-    /*font-size: 42px;*/
-    /*line-height: 40px;*/
-    /*-webkit-animation-name: opacity;*/
-    /*-webkit-animation-duration: 2s;*/
-    /*-webkit-animation-iteration-count: infinite;*/
-    /*animation-name: opacity;*/
-    /*animation-duration: 5s;*/
-    /*animation-iteration-count: infinite;*/
-/*}*/
-/*.content__container__text {*/
-    /*display: inline;*/
-    /*float: left;*/
-    /*margin: 0;*/
-/*}*/
-/*.content__container__list {*/
-    /*margin-top: 0;*/
-    /*width: 500px;*/
-    /*padding-left: 110px;*/
-    /*text-align: left;*/
-    /*list-style: none;*/
-    /*-webkit-animation-name: change;*/
-    /*-webkit-animation-duration: 30s;*/
-    /*-webkit-animation-iteration-count: infinite;*/
-    /*animation-name: change;*/
-    /*animation-duration: 30s;*/
-    /*animation-iteration-count: infinite;*/
-/*}*/
-/*.content__container__list__item {*/
-    /*line-height: 40px;*/
-    /*margin: 330px;*/
-/*}*/
-
-/*@-webkit-keyframes opacity {*/
-    /*0%, 100% {*/
-        /*opacity: 0;*/
-    /*}*/
-    /*50% {*/
-        /*opacity: 1;*/
-    /*}*/
-/*}*/
-/*@-webkit-keyframes change {*/
-    /*0%, 12.66%, 100% {*/
-        /*-webkit-transform: translate3d(0, 0, 0);*/
-        /*transform: translate3d(0, 0, 0);*/
-    /*}*/
-    /*16.66%, 29.32% {*/
-        /*-webkit-transform: translate3d(0, -25%, 0);*/
-        /*transform: translate3d(0, -25%, 0);*/
-    /*}*/
-    /*33.32%,45.98% {*/
-        /*-webkit-transform: translate3d(0, -50%, 0);*/
-        /*transform: translate3d(0, -50%, 0);*/
-    /*}*/
-    /*49.98%,62.64% {*/
-        /*-webkit-transform: translate3d(0, -75%, 0);*/
-        /*transform: translate3d(0, -75%, 0);*/
-    /*}*/
-    /*66.64%,79.3% {*/
-        /*-webkit-transform: translate3d(0, -50%, 0);*/
-        /*transform: translate3d(0, -50%, 0);*/
-    /*}*/
-    /*83.3%,95.96% {*/
-        /*-webkit-transform: translate3d(0, -25%, 0);*/
-        /*transform: translate3d(0, -25%, 0);*/
-    /*}*/
-/*}*/
-/*@keyframes opacity {*/
-    /*0%, 100% {*/
-        /*opacity: 0;*/
-    /*}*/
-    /*50% {*/
-        /*opacity: 1;*/
-    /*}*/
-/*}*/
-/*@keyframes change {*/
-    /*0%, 12.66%, 100% {*/
-        /*-webkit-transform: translate3d(0, 0, 0);*/
-        /*transform: translate3d(0, 0, 0);*/
-    /*}*/
-    /*16.66%, 29.32% {*/
-        /*-webkit-transform: translate3d(0, -25%, 0);*/
-        /*transform: translate3d(0, -25%, 0);*/
-    /*}*/
-    /*33.32%,45.98% {*/
-        /*-webkit-transform: translate3d(0, -50%, 0);*/
-        /*transform: translate3d(0, -50%, 0);*/
-    /*}*/
-    /*49.98%,62.64% {*/
-        /*-webkit-transform: translate3d(0, -75%, 0);*/
-        /*transform: translate3d(0, -75%, 0);*/
-    /*}*/
-    /*66.64%,79.3% {*/
-        /*-webkit-transform: translate3d(0, -50%, 0);*/
-        /*transform: translate3d(0, -50%, 0);*/
-    /*}*/
-    /*83.3%,95.96% {*/
-        /*-webkit-transform: translate3d(0, -25%, 0);*/
-        /*transform: translate3d(0, -25%, 0);*/
-    /*}*/
-/*}*/
 
